@@ -1,9 +1,9 @@
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import logging
 import time
-import argparse
 import json
 import configparser
+import os
 from inky import BLACK
 from inky.auto import auto
 from font_fredoka_one import FredokaOne
@@ -11,12 +11,22 @@ from PIL import Image, ImageFont, ImageDraw
 
 AllowedActions = ['both', 'publish', 'subscribe']
 
+# Configure logging
+logger = logging.getLogger("AWSIoTPythonSDK.core")
+logger.setLevel(logging.DEBUG)
+streamHandler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+streamHandler.setFormatter(formatter)
+logger.addHandler(streamHandler)
+
+
 def process_message(client, userdata, message):
     if message.topic == topic:
         message_payload = json.loads(message.payload)
         status_type = message_payload['type']
         if status_type == 'image':
             set_eink_image(status=message_payload['data'])
+
 
 def set_eink_image(status: str = 'idle', path: str = "img"):
     filename = f"{status}.png"
@@ -45,15 +55,15 @@ mode = config['aws_iot'].get('mode') or 'both'
 defaultStatus = config['status_board'].get('default_status') or None
 
 if mode not in AllowedActions:
-    parser.error("Unknown --mode option %s. Must be one of %s" % (mode, str(AllowedActions)))
+    logger.error("Unknown --mode option %s. Must be one of %s" % (mode, str(AllowedActions)))
     exit(2)
 
 if useWebsocket and certificatePath and privateKeyPath:
-    parser.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
+    logger.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
     exit(2)
 
 if not useWebsocket and (not certificatePath or not privateKeyPath):
-    parser.error("Missing credentials for authentication.")
+    logger.error("Missing credentials for authentication.")
     exit(2)
 
 # Port defaults
@@ -61,14 +71,6 @@ if useWebsocket and not port:  # When no port override for WebSocket, default to
     port = 443
 if not useWebsocket and not port:  # When no port override for non-WebSocket, default to 8883
     port = 8883
-
-# Configure logging
-logger = logging.getLogger("AWSIoTPythonSDK.core")
-logger.setLevel(logging.DEBUG)
-streamHandler = logging.StreamHandler()
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-streamHandler.setFormatter(formatter)
-logger.addHandler(streamHandler)
 
 # Init AWSIoTMQTTClient
 myAWSIoTMQTTClient = None
