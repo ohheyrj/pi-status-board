@@ -14,7 +14,7 @@ AllowedActions = ['both', 'publish', 'subscribe']
 
 # Configure logging
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 streamHandler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 streamHandler.setFormatter(formatter)
@@ -22,16 +22,20 @@ logger.addHandler(streamHandler)
 
 
 def process_message(client, userdata, message):
+    logger.info('Processing incoming message')
     if message.topic == topic:
         message_payload = json.loads(message.payload)
         status_type = message_payload['type']
         if status_type == 'image':
+            logger.info('Setting eink display to image')
             set_eink_image(status=message_payload['data'], path=img_path)
+    else:
+        logger.info(f'Ignoring message for topic {topic}')
 
 
 def set_eink_image(path: str, status: str = 'idle'):
     filename = f"{status}.png"
-    print(f'Using filename: {filename}')
+    logger.ino(f'Using filename: {filename}')
     inky_display = auto(ask_user=True, verbose=True)
     inky_display.set_border(BLACK)
 
@@ -69,6 +73,12 @@ clientId = config['aws_iot'].get('client_id') or 'StatusBoard'
 topic = config['aws_iot'].get('topic') or 'status_board'
 mode = config['aws_iot'].get('mode') or 'both'
 defaultStatus = config['status_board'].get('default_status') or None
+
+logger.info(f'Using AWS root certificate: {rootCAPath}')
+logger.info(f'Using AWS IoT Thing certificate: {certificatePath}')
+logger.info(f'Using AWS IoT Thing private key: {privateKeyPath}')
+logger.info(f'Using endpoint {host}:{port}')
+logger.info(f'Using topic {topic}')
 
 if mode not in AllowedActions:
     logger.error("Unknown --mode option %s. Must be one of %s" % (mode, str(AllowedActions)))
