@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+boto3 = "*"
+inky = "*"
+font-fredoka-one = "*"
+AWSIoTPythonSDK = "*"
+Pillow = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
