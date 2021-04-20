@@ -8,11 +8,12 @@ from inky import BLACK
 from inky.auto import auto
 from font_fredoka_one import FredokaOne
 from PIL import Image, ImageFont, ImageDraw
+from pathlib import Path
 
 AllowedActions = ['both', 'publish', 'subscribe']
 
 # Configure logging
-logger = logging.getLogger("AWSIoTPythonSDK.core")
+logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 streamHandler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -40,13 +41,27 @@ def set_eink_image(status: str = 'idle', path: str = "img"):
     inky_display.show()
 
 
+base_path = Path(__file__).absolute().parent
+
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(base_path.join('config.ini'))
+
+if Path(config['certs']['root_ca']).is_absolute():
+    rootCAPath = config['certs']['root_ca']
+else:
+    rootCAPath = base_path.join(config['certs']['root_ca'])
+
+if Path(config['certs']['iot_cert']).is_absolute():
+    certificatePath = config['certs']['iot_cert']
+else:
+    certificatePath = base_path.join(config['certs']['iot_cert'])
+
+if Path(config['certs']['iot_priv_key']).is_absolute():
+    privateKeyPath = config['certs']['iot_priv_key']
+else:
+    privateKeyPath = base_path.join(config['certs']['iot_priv_key'])
 
 host = config['aws_iot'].get('endpoint')
-rootCAPath = config['certs']['root_ca']
-certificatePath = config['certs']['iot_cert']
-privateKeyPath = config['certs']['iot_priv_key']
 port = config['aws_iot'].get('port') or None
 useWebsocket = config['aws_iot'].get('port') or False
 clientId = config['aws_iot'].get('client_id') or 'StatusBoard'
