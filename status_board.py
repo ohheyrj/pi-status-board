@@ -21,8 +21,7 @@ streamHandler.setFormatter(formatter)
 logger.addHandler(streamHandler)
 
 base_path = str(Path(__file__).absolute().parent)
-img_path = base_path + "/img"
-FONT_PATH = base_path + "/resources/louis_george_cafe.ttf"
+img_path = base_path + "resources/img"
 
 
 def process_message(client, userdata, message):
@@ -57,12 +56,9 @@ def set_eink_text():
     inky_display.set_border(BLACK)
     img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
     draw = ImageDraw.Draw(img)
-    #font = ImageFont.truetype(FredokaOne, 22)
-    font = ImageFont.truetype(FONT_PATH, 22)
+    font = ImageFont.truetype(FredokaOne, 22)
     message = "Currently playing\nFall Out New Vegas"
     w, h = font.getsize(message)
-    # x = (inky_display.WIDTH / 2) - (w / 2)
-    # y = (inky_display.HEIGHT / 2) - (h / 2)
     x = 0
     y = 0
     # draw.text((x, y), message, inky_display.BLACK, font)
