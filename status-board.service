@@ -1,12 +1,12 @@
 [Unit]
 Description=Status Board Python Updated
-After=multi-user.target
-Conflicts=getty@tty1.service
+After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/pi/aws-iot/status_board.py
-StandardInput=tty-force
+User=statusboard
+ExecStart=/usr/bin/python3 /home/statusboard/aws-iot/status_board.py
+SyslogIdentifier=StatusBoard
 
 [Install]
 WantedBy=multi-user.target
