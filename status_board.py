@@ -26,10 +26,10 @@ def process_message(client, userdata, message):
         message_payload = json.loads(message.payload)
         status_type = message_payload['type']
         if status_type == 'image':
-            set_eink_image(status=message_payload['data'])
+            set_eink_image(status=message_payload['data'], path=img_path)
 
 
-def set_eink_image(status: str = 'idle', path: str = "img"):
+def set_eink_image(path: str, status: str = 'idle'):
     filename = f"{status}.png"
     print(f'Using filename: {filename}')
     inky_display = auto(ask_user=True, verbose=True)
@@ -41,7 +41,8 @@ def set_eink_image(status: str = 'idle', path: str = "img"):
     inky_display.show()
 
 
-base_path = Path(__file__).absolute().parent
+base_path = str(Path(__file__).absolute().parent)
+img_path = base_path + "/img"
 
 config = configparser.ConfigParser()
 config.read(base_path + "/" + 'config.ini')
