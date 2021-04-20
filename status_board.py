@@ -20,6 +20,10 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 streamHandler.setFormatter(formatter)
 logger.addHandler(streamHandler)
 
+base_path = str(Path(__file__).absolute().parent)
+img_path = base_path + "/img"
+FONT_PATH = base_path + "/resources/louis_george_cafe.ttf"
+
 
 def process_message(client, userdata, message):
     logger.info('Processing incoming message')
@@ -53,7 +57,8 @@ def set_eink_text():
     inky_display.set_border(BLACK)
     img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(FredokaOne, 22)
+    #font = ImageFont.truetype(FredokaOne, 22)
+    font = ImageFont.truetype(FONT_PATH, 22)
     message = "Currently playing\nFall Out New Vegas"
     w, h = font.getsize(message)
     # x = (inky_display.WIDTH / 2) - (w / 2)
@@ -61,14 +66,11 @@ def set_eink_text():
     x = 0
     y = 0
     # draw.text((x, y), message, inky_display.BLACK, font)
-    draw.multiline_text((x, y), message, inky_display.BLACK, font)
+    draw.multiline_text((x, y), message, inky_display.BLACK, font, align="center")
     # inky_display.set_image(img.rotate(180))
     inky_display.set_image(img)
     inky_display.show()
 
-
-base_path = str(Path(__file__).absolute().parent)
-img_path = base_path + "/img"
 
 config = configparser.ConfigParser()
 config.read(base_path + "/" + 'config.ini')
