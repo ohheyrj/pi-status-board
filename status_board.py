@@ -29,6 +29,9 @@ def process_message(client, userdata, message):
         if status_type == 'image':
             logger.info('Setting eink display to image')
             set_eink_image(status=message_payload['data'], path=img_path)
+        elif status_type == 'text':
+            logger.info('Setting eink display to text')
+            set_eink_text()
     else:
         logger.info(f'Ignoring message for topic {topic}')
 
@@ -40,6 +43,22 @@ def set_eink_image(path: str, status: str = 'idle'):
     inky_display.set_border(BLACK)
 
     img = Image.open(os.path.join(path, filename))
+    # inky_display.set_image(img.rotate(180))
+    inky_display.set_image(img)
+    inky_display.show()
+
+
+def set_eink_text():
+    inky_display = auto(ask_user=True, verbose=True)
+    inky_display.set_border(BLACK)
+    img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype(FredokaOne, 22)
+    message = "Hello, World!"
+    w, h = font.getsize(message)
+    x = (inky_display.WIDTH / 2) - (w / 2)
+    y = (inky_display.HEIGHT / 2) - (h / 2)
+    draw.text((x, y), message, inky_display.BLACK, font)
     # inky_display.set_image(img.rotate(180))
     inky_display.set_image(img)
     inky_display.show()
