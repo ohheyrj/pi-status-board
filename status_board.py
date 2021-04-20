@@ -44,22 +44,22 @@ def set_eink_image(status: str = 'idle', path: str = "img"):
 base_path = Path(__file__).absolute().parent
 
 config = configparser.ConfigParser()
-config.read(base_path.join('config.ini'))
+config.read(base_path.joinpath('config.ini'))
 
 if Path(config['certs']['root_ca']).is_absolute():
     rootCAPath = config['certs']['root_ca']
 else:
-    rootCAPath = base_path.join(config['certs']['root_ca'])
+    rootCAPath = base_path.joinpath(config['certs']['root_ca'])
 
 if Path(config['certs']['iot_cert']).is_absolute():
     certificatePath = config['certs']['iot_cert']
 else:
-    certificatePath = base_path.join(config['certs']['iot_cert'])
+    certificatePath = base_path.joinpath(config['certs']['iot_cert'])
 
 if Path(config['certs']['iot_priv_key']).is_absolute():
     privateKeyPath = config['certs']['iot_priv_key']
 else:
-    privateKeyPath = base_path.join(config['certs']['iot_priv_key'])
+    privateKeyPath = base_path.joinpath(config['certs']['iot_priv_key'])
 
 host = config['aws_iot'].get('endpoint')
 port = config['aws_iot'].get('port') or None
