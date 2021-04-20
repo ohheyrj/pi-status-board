@@ -35,7 +35,7 @@ def process_message(client, userdata, message):
 
 def set_eink_image(path: str, status: str = 'idle'):
     filename = f"{status}.png"
-    logger.ino(f'Using filename: {filename}')
+    logger.info(f'Using filename: {filename}')
     inky_display = auto(ask_user=True, verbose=True)
     inky_display.set_border(BLACK)
 
