@@ -6,9 +6,9 @@ name = "pypi"
 [packages]
 boto3 = "*"
 inky = "*"
-font-fredoka-one = "*"
 AWSIoTPythonSDK = "*"
 Pillow = "*"
+fonts = "*"
 
 [dev-packages]
 pylama = "*"
