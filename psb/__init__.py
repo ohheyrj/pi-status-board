@@ -1,3 +1,4 @@
+"""Init file for PSB, contains logging setup for package"""
 import logging
 
 

@@ -1,3 +1,5 @@
+"""Entry point for psb.
+"""
 import json
 import time
 import sys
@@ -29,6 +31,8 @@ def process_message(client, userdata, message): # noqa
 
 
 def shell():
+    """Command line 'psb'.
+    """
     config = PsbConfig()
 
     logger.info(f'Using AWS root certificate: {config.root_ca}')
