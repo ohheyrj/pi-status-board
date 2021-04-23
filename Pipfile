@@ -12,6 +12,10 @@ Pillow = "*"
 
 [dev-packages]
 pylama = "*"
+psb = {editable = true, path = "."}
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
