@@ -8,7 +8,8 @@ boto3 = "*"
 inky = "*"
 AWSIoTPythonSDK = "*"
 Pillow = "*"
-fonts = "*"
+font-fredoka-one = "*"
+"rpi.gpio" = "*"
 
 [dev-packages]
 pylama = "*"
