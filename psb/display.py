@@ -1,8 +1,8 @@
 """Handler for the image/text processing and display to eInk."""
 import os
 
-from fonts.ttf import FredokaOne # noqa
-from inky import BLACK
+from font_fredoka_one import FredokaOne # noqa
+from inky import BLACK, InkyPHAT
 from inky.auto import auto
 from PIL import Image, ImageDraw, ImageFont
 
@@ -15,8 +15,52 @@ class EinkDisplay:
     def __init__(self):
         """Init function for EinkDisplay.
         """
-        self.inky_display = auto(ask_user=True, verbose=True)
+        try:
+            self.inky_display = auto(ask_user=False, verbose=True)
+        except RuntimeError:
+            logger.error('Problem connecting to eInk display automatically, trying manually.')
+            self.inky_display = InkyPHAT('black')
+
         self.inky_display.set_border(BLACK)
+
+    @staticmethod
+    def process_message(text: str) -> list:
+        """Static method to process incoming message.
+
+        Parameters
+        ----------
+        text : str
+            The contents of message to be processed.
+
+        Returns
+        -------
+        list
+            The message after being processed.
+        """
+        logger.info('Message requires processing.')
+        split_lines = []
+        lines = text.split("\n")
+        for line in lines:
+            if len(line) > 20:
+                logger.info(f'Line, \"{line}\" longer than 20 characters, splitting')
+                line_split = line.split(' ')
+                logger.debug(f'Line when split: {line_split}')
+                new_line = line_split.pop(0)
+                logger.info(new_line)
+                while line_split:
+                    logger.debug(f'Contents of left in line_split: {line_split}')
+                    logger.debug('Line length after join: %s' % len(" ".join([new_line, line_split[0]])))
+                    if len(" ".join([new_line, line_split[0]])) <= 20:
+                        new_line = " ".join([new_line, line_split.pop(0)])
+                    else:
+                        split_lines.append(new_line)
+                        new_line = line_split.pop(0)
+                split_lines.append(new_line)
+            else:
+                logger.info(f'Line, \"{line}\" does not require splitting.')
+                split_lines.append(line)
+        logger.debug(f'Contents of split lines: {split_lines}')
+        return split_lines
 
     def image(self, path: str, status: str = 'idle'):
         """Function to process the request for an image to be displayed.
@@ -33,8 +77,9 @@ class EinkDisplay:
         try:
             img = Image.open(os.path.join(path, filename))
             self.__eink_show(img)
-        except FileNotFoundError:
+        except FileNotFoundError as file_not_found:
             logger.error(f'Cannot set image, no image {filename}')
+            raise FileNotFoundError from file_not_found
 
     def text(self, text: str):
         """Function to process request for text to be displayed on the eink display.
@@ -57,33 +102,15 @@ class EinkDisplay:
             logger.info('Message 1 line and <= 20 characters, displaying.')
             draw.text((x_axis, y_axis), text, self.inky_display.BLACK, font)
         else:
-            logger.info('Message requires processing.')
-            split_lines = []
-            lines = text.split("\n")
-            for line in lines:
-                if len(line) > 20:
-                    logger.info(f'Line, \"{line}\" longer than 20 characters, splitting')
-                    line_split = line.split(' ')
-                    new_line = line_split.pop(0)
-                    while line_split:
-                        if len(" ".join([new_line, line_split.pop(0)])) <= 20:
-                            new_line = " ".join([new_line, line_split.pop(0)])
-                        else:
-                            split_lines.append(new_line)
-                            try:
-                                new_line = line_split.pop(0)
-                            except IndexError:
-                                split_lines.append(line_split.pop(0))
-                else:
-                    split_lines.append(line)
-            if len(split_lines) <= 3:
-                text = "\n".join(split_lines)
+            processed_message = self.process_message(text)
+            if len(processed_message) <= 3:
+                text = "\n".join(processed_message)
                 logger.info(f'New message: {text}')
                 draw.multiline_text((x_axis, y_axis), text, self.inky_display.BLACK, font, align="center")
                 self.__eink_show(img)
             else:
-                logger.error(f'Cannot display message, more than 3 lines long, ({len(split_lines)})')
-                logger.error(f'Post-processing message: {split_lines}')
+                logger.error(f'Cannot display message, more than 3 lines long, ({len(processed_message)})')
+                logger.error(f'Post-processing message: {processed_message}')
 
     def __eink_show(self, img: Image):
         """Function to show completed image on display.png
