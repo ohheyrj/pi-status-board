@@ -63,3 +63,45 @@ def test_config_port_websocket():
     """
     config = conf.PsbConfig(config_file="tests/test-config-files/conf-use-websocket.ini")
     assert config.port == 443
+
+
+def test_config_default_status():
+    """Test that the correct default_status from config is returned.
+    """
+    config = conf.PsbConfig(config_file="tests/test-config-files/conf.ini")
+    assert config.default_status == "idle"
+
+
+def test_config_img_location():
+    """Test that the correct img_location from config is returned.
+    """
+    config = conf.PsbConfig(config_file="tests/test-config-files/conf.ini")
+    assert config.img_location == "/etc/psb/img"
+
+
+def test_config_client_id():
+    """Test that the correct client_id from config is returned.
+    """
+    config = conf.PsbConfig(config_file="tests/test-config-files/conf.ini")
+    assert config.client_id == "test_client_id"
+
+
+def test_config_incorrect_mode_value_error():
+    """Test that a ValueError exception is raise when mode is not a valid value.
+    """
+    with pytest.raises(ValueError):
+        conf.PsbConfig(config_file='tests/test-config-files/conf-incorrect-mode.ini')
+
+
+def test_config_websockets_and_certs_system_exit():
+    """Test that a SystemExit exception is raise when use_websockets is true and certs provided.
+    """
+    with pytest.raises(SystemExit):
+        conf.PsbConfig(config_file='tests/test-config-files/conf-use-websocket-certs-provided.ini')
+
+
+def test_config_no_certs_system_exit():
+    """Test that a SystemExit exception is raise when no certs provided when not using websockets`.
+    """
+    with pytest.raises(SystemExit):
+        conf.PsbConfig(config_file='tests/test-config-files/conf-no-certs.ini')
