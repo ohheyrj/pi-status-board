@@ -1,5 +1,5 @@
 AWSIoTPythonSDK
 inky
-fonts
+font-fredoka-one
 Pillow
 boto3
