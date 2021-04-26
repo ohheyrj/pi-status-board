@@ -1,5 +1,22 @@
 # Changelog
 
+<a name="0.15.0"></a>
+## 0.15.0 (2021-04-26)
+
+### Added
+
+- ➕ Added missing rpi.gpio from requirements [[9eba54a](https://github.com/rj175/aws-iot/commit/9eba54a4a12244ab32cb2512a7cae2dbd12d0684)]
+- ➕ Added missing requirements.txt dep [[4491a9b](https://github.com/rj175/aws-iot/commit/4491a9bc42b838647a22a003dbef29c630b1481b)]
+
+### Fixed
+
+- 💚 Added missing dep [[21333aa](https://github.com/rj175/aws-iot/commit/21333aaf48b205335998cf38ab7c92240ab3f89b)]
+
+### Miscellaneous
+
+-  Create python-publish.yml [[ced22e6](https://github.com/rj175/aws-iot/commit/ced22e61535362125c92244059f4a49b9f558e99)]
+
+
 <a name="0.14.0"></a>
 ## 0.14.0 (2021-04-26)
 
