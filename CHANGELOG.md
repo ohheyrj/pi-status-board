@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.16.0"></a>
+## 0.16.0 (2021-04-26)
+
+### Changed
+
+- 🎨 Changes to setup.py [[deedc45](https://github.com/rj175/aws-iot/commit/deedc4554438233acb98b08d008db94f5795573b)]
+
+
 <a name="0.15.0"></a>
 ## 0.15.0 (2021-04-26)
 
