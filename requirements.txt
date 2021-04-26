@@ -3,3 +3,4 @@ inky
 font-fredoka-one
 Pillow
 boto3
+rpi.gpio
