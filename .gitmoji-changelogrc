@@ -1,0 +1,7 @@
+{
+  "project": {
+    "name": "Pi Status Board (PSB)",
+    "description": "A python module to display predefined pictures or incoming text from AWS IoT Core.",
+    "version": "0.14.0"
+  }
+}
