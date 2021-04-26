@@ -1,6 +1,7 @@
 """Configuration read from config file."""
 from configparser import ConfigParser
 from pathlib import Path
+
 from psb import logger
 
 
@@ -15,6 +16,7 @@ class PsbConfig:
         FileNotFoundError
             Return FileNotFoundError if config file is not found.
         """
+        self.allowed_actions = ['both', 'publish', 'subscribe']
         self.config_file = Path(config_file)
         if self.config_file.is_file():
             self.config = ConfigParser()
@@ -22,6 +24,27 @@ class PsbConfig:
         else:
             logger.error(f'Cannot find config file at {config_file}')
             raise FileNotFoundError
+
+        if self.mode not in self.allowed_actions:
+            logger.error("Unknown --mode option %s. Must be one of %s" % (self.mode, str(self.allowed_actions)))
+            raise ValueError("Unknown --mode option %s. Must be one of %s" % (self.mode, str(self.allowed_actions)))
+
+        if self.use_websockets and self.aws_iot_cert and self.aws_iot_priv_key:
+            logger.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
+            raise SystemExit
+
+        if not self.use_websockets:
+            logger.info('Websockets false')
+            if not self.aws_iot_cert or not self.aws_iot_priv_key:
+                logger.error("Missing credentials for authentication.")
+                raise SystemExit
+
+        logger.info(f'Using AWS root certificate: {self.root_ca}')
+        logger.info(f'Using AWS IoT Thing certificate: {self.aws_iot_cert}')
+        logger.info(f'Using AWS IoT Thing private key: {self.aws_iot_priv_key}')
+        logger.info(f'Websockets set to {self.use_websockets}')
+        logger.info(f'Using endpoint {self.endpoint}:{self.port}')
+        logger.info(f'Using topic {self.topic}')
 
     @property
     def root_ca(self) -> str:
@@ -32,7 +55,10 @@ class PsbConfig:
         str
             The path to the root CA file.
         """
-        return self.config['certs']['root_ca']
+        try:
+            return self.config['certs']['root_ca']
+        except KeyError:
+            return False
 
     @property
     def aws_iot_cert(self) -> str:
@@ -43,7 +69,10 @@ class PsbConfig:
         str
             The path to the certificate.
         """
-        return self.config['certs']['iot_cert']
+        try:
+            return self.config['certs']['iot_cert']
+        except KeyError:
+            return False
 
     @property
     def aws_iot_priv_key(self) -> str:
@@ -54,7 +83,10 @@ class PsbConfig:
         str
             The path to the private key.
         """
-        return self.config['certs']['iot_priv_key']
+        try:
+            return self.config['certs']['iot_priv_key']
+        except KeyError:
+            return False
 
     @property
     def endpoint(self) -> str:
@@ -95,9 +127,14 @@ class PsbConfig:
             The config value.
         """
         try:
-            return self.config['aws_iot']['use_websockets']
+            result = None
+            if self.config['aws_iot']['use_websockets'] in ['false', 'False']:
+                result = False
+            elif self.config['aws_iot']['use_websockets'] in ['true', 'True']:
+                result = True
         except KeyError:
-            return None
+            result = False
+        return result
 
     @property
     def client_id(self) -> str:
