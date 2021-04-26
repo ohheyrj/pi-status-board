@@ -2,15 +2,12 @@
 """
 import json
 import time
-import sys
 
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 
 from psb import logger
 from psb.conf import PsbConfig
 from psb.display import EinkDisplay
-
-AllowedActions = ['both', 'publish', 'subscribe']
 
 
 def process_message(client, userdata, message): # noqa
@@ -34,24 +31,6 @@ def shell():
     """Command line 'psb'.
     """
     config = PsbConfig()
-
-    logger.info(f'Using AWS root certificate: {config.root_ca}')
-    logger.info(f'Using AWS IoT Thing certificate: {config.aws_iot_cert}')
-    logger.info(f'Using AWS IoT Thing private key: {config.aws_iot_priv_key}')
-    logger.info(f'Using endpoint {config.endpoint}:{config.port}')
-    logger.info(f'Using topic {config.topic}')
-
-    if config.mode not in AllowedActions:
-        logger.error("Unknown --mode option %s. Must be one of %s" % (config.mode, str(AllowedActions)))
-        raise ValueError("Unknown --mode option %s. Must be one of %s" % (config.mode, str(AllowedActions)))
-
-    if config.use_websockets and config.aws_iot_cert and config.aws_iot_priv_key:
-        logger.error("X.509 cert authentication and WebSocket are mutual exclusive. Please pick one.")
-        sys.exit(2)
-
-    if not config.use_websockets and (not config.aws_iot_cert or not config.aws_iot_priv_key):
-        logger.error("Missing credentials for authentication.")
-        sys.exit(2)
 
     # Init AWSIoTMQTTClient
     mqtt_client = None
