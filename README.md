@@ -2,6 +2,9 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/rj175/pi-status-board/Python%20package)
 ![GitHub issues](https://img.shields.io/github/issues/rj175/pi-status-board)
+![GitHub](https://img.shields.io/github/license/rj175/pi-status-board)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/psb)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/psb)
 
 The Pi Status Board (psb) can be used to display text or pre-defined images on an eInk display attached to a Raspberry Pi. It is controlled via AWS IoT Core and uses mqtt.
 
