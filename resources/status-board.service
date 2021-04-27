@@ -1,0 +1,12 @@
+[Unit]
+Description=Pi Status Board
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=python3 /home/pi/.local/bin/psb
+SyslogIdentifier=PiStatusBoard
+
+[Install]
+WantedBy=multi-user.target
