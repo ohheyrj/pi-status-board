@@ -1,5 +1,23 @@
 # Changelog
 
+<a name="0.17.0"></a>
+## 0.17.0 (2021-04-28)
+
+### Changed
+
+- 🎨 Updated setup.py with README contents [[7aa3e14](https://github.com/rj175/aws-iot/commit/7aa3e14f77859bd7d57b9b99d72736c11b85a51a)]
+- 🚚 Created resources dir [[9b7dfbf](https://github.com/rj175/aws-iot/commit/9b7dfbf34fba8cbf1d55f59ce6a650da80f0593b)]
+- 🚚 Moved config and systemd examples [[2a09d16](https://github.com/rj175/aws-iot/commit/2a09d16092a39282b7f1c1d03747076c4f6562bb)]
+
+### Miscellaneous
+
+- 📄 Changed license filename [[6261e89](https://github.com/rj175/aws-iot/commit/6261e89b90240b7e69ee0127591e1ee13fa1c5f1)]
+- 📝 Updated README.md [[c75cac2](https://github.com/rj175/aws-iot/commit/c75cac2ae2eb2ea89eda3ae698c54afbe493b242)]
+- 📝 Updated README.md [[33de34a](https://github.com/rj175/aws-iot/commit/33de34afb2d32465c39b197b9f7eb1e186c054a7)]
+- 📝 Added docs [[1305636](https://github.com/rj175/aws-iot/commit/1305636454b147e753559e667957463ff9d80329)]
+- 📄 Added LICENSE.md [[3ce6434](https://github.com/rj175/aws-iot/commit/3ce64344b758a70a1dca50ea8094ed753164b51a)]
+
+
 <a name="0.16.0"></a>
 ## 0.16.0 (2021-04-26)
 
