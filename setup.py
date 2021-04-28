@@ -26,7 +26,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
     ],
-    version='0.16.0',
+    version='0.17.0',
     python_requires=">=3.6",
     packages=find_packages(),
     install_requires=[
